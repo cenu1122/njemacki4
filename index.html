@@ -1,45 +1,63 @@
-﻿<!DOCTYPE html>
-<html lang="sr">
+<!DOCTYPE html>
+<html lang="bs">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Moja stranica sa glasovnim izgovorom</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Besplatni AI Kurs Njemačkog</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      padding: 20px;
-      max-width: 600px;
-      margin: auto;
-      background: #f0f0f0;
-    }
-    h1 {
-      color: #333;
-    }
-    button {
-      padding: 10px 20px;
-      font-size: 16px;
-      cursor: pointer;
-      background-color: #007bff;
-      color: white;
-      border: none;
-      border-radius: 5px;
-    }
-    button:hover {
-      background-color: #0056b3;
-    }
+    body { font-family: Arial, sans-serif; background:#f4f4f4; margin:0; padding:0; }
+    header { background:#1e88e5; color:white; padding:20px; text-align:center; }
+    section { max-width:800px; margin:20px auto; background:white; padding:20px; border-radius:10px; }
+    button { padding:10px 20px; border:none; border-radius:5px; background:#1e88e5; color:white; cursor:pointer; }
+    #chatbox { width:100%; height:300px; border:1px solid #ccc; padding:10px; overflow-y:auto; background:#fafafa; }
+    #userInput { width:80%; padding:10px; }
   </style>
 </head>
 <body>
-  <h1>Zdravo!</h1>
-  <p>Dobrodošao na moju stranicu. Klikni na dugme ispod da čuješ izgovoreni tekst.</p>
+  <header>
+    <h1>Besplatni AI Kurs Njemačkog</h1>
+    <p>Interaktivni kurs koji vodi AI tutor</p>
+  </header>
 
-  <button onclick="govori()">Izgovori tekst</button>
+  <section>
+    <h2>AI Tutor</h2>
+    <div id="chatbox"></div><br>
+    <input type="text" id="userInput" placeholder="Upiši poruku..." />
+    <button onclick="sendMessage()">Pošalji</button>
+  </section>
 
-  <script>
-    function govori() {
-      const govor = new SpeechSynthesisUtterance("Zdravo! Dobrodošao na moju stranicu.");
-      speechSynthesis.speak(govor);
+<script>
+  const chatbox = document.getElementById('chatbox');
+
+  function addMessage(sender, text) {
+    chatbox.innerHTML += `<p><strong>${sender}:</strong> ${text}</p>`;
+    chatbox.scrollTop = chatbox.scrollHeight;
+  }
+
+  addMessage("Tutor", "Hallo! Ich bin dein kostenloser AI-Lehrer. Spreman sam za lekcije. Kako želiš početi?");
+
+  function sendMessage() {
+    const input = document.getElementById('userInput');
+    const text = input.value.trim();
+    if (!text) return;
+
+    addMessage("Ti", text);
+
+    // jednostavan offline AI tutor (bez API-ključa)
+    let odgovor = "Nisam razumio, pokušaj ponovo.";
+
+    if (text.toLowerCase().includes("lekcija 1")) {
+      odgovor = "Lekcija 1: Pozdravi – 'Hallo', 'Guten Tag', 'Wie geht's?'";
+    } else if (text.toLowerCase().includes("kako si")) {
+      odgovor = "'Wie geht's?' znači 'Kako si?'. Odgovor: 'Mir geht's gut.'";
+    } else if (text.toLowerCase().includes("brojevi")) {
+      odgovor = "Brojevi 1-10: eins, zwei, drei, vier, fünf, sechs, sieben, acht, neun, zehn.";
     }
-  </script>
+
+    addMessage("Tutor", odgovor);
+    input.value = "";
+  }
+</script>
+
 </body>
 </html>
