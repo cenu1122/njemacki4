@@ -1,104 +1,61 @@
 <!DOCTYPE html>
 <html lang="bs">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AI Njemački Kurs - Govorni Tutor</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interaktivni Kurs Njemačkog</title>
   <style>
-    body { font-family: Arial, sans-serif; background:#f4f4f4; margin:0; padding:0; }
-    header { background:#1e88e5; color:white; padding:20px; text-align:center; }
-    section { max-width:800px; margin:20px auto; background:white; padding:20px; border-radius:10px; }
-    button { padding:10px 20px; border:none; border-radius:5px; background:#1e88e5; color:white; cursor:pointer; }
-    #chatbox { width:100%; height:300px; border:1px solid #ccc; padding:10px; overflow-y:auto; background:#fafafa; }
-    #userInput { width:80%; padding:10px; }
+    body { font-family: Arial, sans-serif; margin: 20px; background: #f4f4f4; }
+    h1, h2 { color: #2c3e50; }
+    .lesson, .quiz { background: #fff; padding: 20px; margin-bottom: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);}
+    button { padding: 10px 20px; margin: 5px; border: none; border-radius: 5px; background-color: #3498db; color: #fff; cursor: pointer; }
+    button:hover { background-color: #2980b9; }
+    .feedback { margin-top: 10px; font-weight: bold; }
   </style>
 </head>
 <body>
-  <header>
-    <h1>AI Kurs Njemačkog</h1>
-    <p>Govorni AI tutor + pitanja preko mikrofona</p>
-  </header>
 
-  <section>
-    <h2>AI Tutor</h2>
-    <div id="chatbox"></div><br>
-    <input type="text" id="userInput" placeholder="Upiši poruku..." />
-    <button onclick="sendMessage()">Pošalji</button>
-    <button onclick="startListening()">🎤 Pitanje preko mikrofona</button>
-  </section>
+<h1>Interaktivni Kurs Njemačkog</h1>
 
-  <section>
-    <h2>Pisani Test</h2>
-    <p><strong>1.</strong> Prevedi na njemački: "Kako se zoveš?"</p>
-    <p><strong>2.</strong> Napiši brojeve od 1 do 5 na njemačkom.</p>
-    <p><strong>3.</strong> Prevedi: "Dobar dan, kako ste?"</p>
-  </section>
+<div class="lesson">
+  <h2>Lekcija 1: Osnovne Fraze</h2>
+  <p>Hallo = Zdravo</p>
+  <p>Danke = Hvala</p>
+  <p>Bitte = Molim</p>
+  <button onclick="speakText('Hallo')">▶️ Hallo</button>
+  <button onclick="speakText('Danke')">▶️ Danke</button>
+  <button onclick="speakText('Bitte')">▶️ Bitte</button>
+</div>
+
+<div class="quiz">
+  <h2>Kviz: Prevedi na njemački</h2>
+  <p>Kako se kaže "Hvala" na njemačkom?</p>
+  <button onclick="checkAnswer(this,'Danke')">Danke</button>
+  <button onclick="checkAnswer(this,'Bitte')">Bitte</button>
+  <button onclick="checkAnswer(this,'Hallo')">Hallo</button>
+  <div class="feedback" id="feedback"></div>
+</div>
 
 <script>
-  const chatbox = document.getElementById('chatbox');
-
-  function addMessage(sender, text) {
-    chatbox.innerHTML += `<p><strong>${sender}:</strong> ${text}</p>`;
-    chatbox.scrollTop = chatbox.scrollHeight;
-    speakText(text);
-  }
-
-  // TTS – AI Tutor govori
+  // Funkcija za TTS (Text-to-Speech)
   function speakText(text) {
     const utter = new SpeechSynthesisUtterance(text);
-    utter.lang = "de-DE";
+    utter.lang = 'de-DE'; // njemački jezik
     speechSynthesis.speak(utter);
   }
 
-  // početna poruka
-  addMessage("Tutor", "Hallo! Ich bin dein AI-Lehrer. Pitaj me bilo šta ili počni lekciju.");
-
-  // offline AI logika
-  function processAI(text) {
-    let odgovor = "Entschuldigung, ponovi pitanje.";
-
-    const t = text.toLowerCase();
-
-    if (t.includes("lekcija 1")) {
-      odgovor = "Lekcija 1: Pozdravi – Hallo, Guten Tag, Guten Morgen, Tschüss.";
-    } else if (t.includes("kako si") || t.includes("wie geht")) {
-      odgovor = "'Wie geht's?' znači 'Kako si?'. Odgovor: 'Mir geht es gut.'";
-    } else if (t.includes("brojevi")) {
-      odgovor = "Brojevi 1-10: eins, zwei, drei, vier, fünf, sechs, sieben, acht, neun, zehn.";
-    } else if (t.includes("hvala")) {
-      odgovor = "Danke schön!";
-    } else if (t.includes("ko si")) {
-      odgovor = "Ich bin dein AI Deutschlehrer.";
+  // Funkcija za provjeru odgovora u kvizu
+  function checkAnswer(button, correct) {
+    const feedback = document.getElementById('feedback');
+    if(button.textContent === correct){
+      feedback.textContent = "✅ Tačno!";
+      feedback.style.color = "green";
+    } else {
+      feedback.textContent = "❌ Netačno, pokušaj ponovo.";
+      feedback.style.color = "red";
     }
-
-    return odgovor;
-  }
-
-  // slanje poruke tekstom
-  function sendMessage() {
-    const input = document.getElementById('userInput');
-    const text = input.value.trim();
-    if (!text) return;
-
-    addMessage("Ti", text);
-    const odgovor = processAI(text);
-    addMessage("Tutor", odgovor);
-    input.value = "";
-  }
-
-  // SPEECH TO TEXT – Pitanja preko mikrofona
-  function startListening() {
-    const rec = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-    rec.lang = "bs-BA";
-    rec.start();
-
-    rec.onresult = function(e) {
-      const text = e.results[0][0].transcript;
-      addMessage("Ti (mikrofon)", text);
-      const odgovor = processAI(text);
-      addMessage("Tutor", odgovor);
-    };
   }
 </script>
+
 </body>
 </html>
