@@ -1,293 +1,83 @@
 <!DOCTYPE html>
 <html lang="bs">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MA-BH Namještaj po mjeri</title>
-
-    <style>
-        body {
-            margin: 0;
-            font-family: Arial, Helvetica, sans-serif;
-            line-height: 1.6;
-            color: #333;
-        }
-
-        header {
-            background: #2c2c2c;
-            color: #fff;
-            padding: 15px 0;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-
-        .container {
-            width: 90%;
-            max-width: 1200px;
-            margin: auto;
-        }
-
-        nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        nav ul {
-            list-style: none;
-            display: flex;
-            padding: 0;
-            margin: 0;
-        }
-
-        nav ul li {
-            margin-left: 20px;
-        }
-
-        nav ul li a {
-            color: #fff;
-            text-decoration: none;
-            font-weight: bold;
-        }
-
-        nav ul li a:hover {
-            text-decoration: underline;
-        }
-
-        .hero {
-            background: url("hero.jpg") center/cover no-repeat;
-            color: #fff;
-            height: 70vh;
-            display: flex;
-            align-items: center;
-        }
-
-        .hero-content {
-            background: rgba(0,0,0,0.6);
-            padding: 30px;
-            border-radius: 5px;
-        }
-
-        .hero h1 {
-            font-size: 40px;
-            margin-bottom: 10px;
-        }
-
-        .btn {
-            display: inline-block;
-            background: #c59d5f;
-            color: #fff;
-            padding: 12px 25px;
-            margin-top: 15px;
-            text-decoration: none;
-            font-weight: bold;
-            border-radius: 4px;
-        }
-
-        .btn:hover {
-            background: #b08950;
-        }
-
-        section {
-            padding: 60px 0;
-        }
-
-        section h2 {
-            text-align: center;
-            margin-bottom: 30px;
-            font-size: 32px;
-        }
-
-        .about, .pricing, .faq {
-            background: #f4f4f4;
-        }
-
-        .services-grid, .portfolio-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-        }
-
-        .box {
-            background: #fff;
-            padding: 25px;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
-
-        .portfolio-grid img {
-            width: 100%;
-            border-radius: 5px;
-        }
-
-        .contact-info {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        form {
-            max-width: 600px;
-            margin: auto;
-        }
-
-        form input, form textarea {
-            width: 100%;
-            padding: 12px;
-            margin-bottom: 15px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-
-        footer {
-            background: #2c2c2c;
-            color: #fff;
-            text-align: center;
-            padding: 20px 0;
-        }
-
-        @media(max-width: 768px) {
-            .hero h1 {
-                font-size: 30px;
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Online Učenje Jezika | Glasovni AI Chat</title>
+<style>
+body { font-family: Arial, sans-serif; margin:0; background:#f4f4f4; color:#333; }
+header { background:#005f73; color:#fff; padding:20px 0; text-align:center; }
+header h1 { margin:0; font-size:2em; }
+section { padding:30px 20px; max-width:1000px; margin:auto; background:#fff; border-radius:10px; margin-bottom:20px; box-shadow:0 2px 8px rgba(0,0,0,0.1); }
+h2 { color:#005f73; }
+button { background:#0a9396; color:#fff; border:none; padding:10px 20px; border-radius:5px; cursor:pointer; font-weight:bold; margin-top:10px; }
+button:hover { background:#94d2bd; color:#000; }
+.chat-output { background:#e9f5f2; padding:15px; border-radius:10px; min-height:100px; margin-top:10px; }
+</style>
 </head>
 <body>
 
 <header>
-    <div class="container">
-        <nav>
-            <h2>MA-BH Namještaj</h2>
-            <ul>
-                <li><a href="#home">Početna</a></li>
-                <li><a href="#about">O nama</a></li>
-                <li><a href="#services">Usluge</a></li>
-                <li><a href="#portfolio">Portfolio</a></li>
-                <li><a href="#pricing">Cjenovnik</a></li>
-                <li><a href="#faq">FAQ</a></li>
-                <li><a href="#contact">Kontakt</a></li>
-            </ul>
-        </nav>
-    </div>
+<h1>Online Učenje Jezika | Glasovni AI Chat</h1>
+<p>Pričaj sa AI-jem i učite engleski i njemački</p>
 </header>
 
-<section class="hero" id="home">
-    <div class="container">
-        <div class="hero-content">
-            <h1>Namještaj po mjeri za svaki prostor</h1>
-            <p>Kvalitetna izrada, moderan dizajn i rješenja prilagođena vašem domu ili poslovnom prostoru.</p>
-            <a href="#contact" class="btn">Zatraži besplatnu procjenu</a>
-        </div>
-    </div>
+<section id="english">
+<h2>Engleski</h2>
+<p>Pritisni dugme i postavi pitanje glasom.</p>
+<button onclick="startRecognition('english')">🎤 Postavi pitanje</button>
+<div id="english-output" class="chat-output"></div>
 </section>
 
-<section class="about" id="about">
-    <div class="container">
-        <h2>O nama</h2>
-        <p>
-            MA-BH Namještaj po mjeri bavi se dizajnom, izradom i montažom namještaja po mjeri.
-            Svakom projektu pristupamo individualno, koristeći kvalitetne materijale i provjerene okove.
-            Naš cilj je funkcionalan, estetski i dugotrajan namještaj.
-        </p>
-    </div>
+<section id="german">
+<h2>Njemački</h2>
+<p>Pritisni dugme i postavi pitanje glasom.</p>
+<button onclick="startRecognition('german')">🎤 Postavi pitanje</button>
+<div id="german-output" class="chat-output"></div>
 </section>
 
-<section id="services">
-    <div class="container">
-        <h2>Usluge</h2>
-        <div class="services-grid">
-            <div class="box">
-                <h3>Kuhinje po mjeri</h3>
-                <p>Moderne i funkcionalne kuhinje prilagođene vašem prostoru.</p>
-            </div>
-            <div class="box">
-                <h3>Ormari i garderoberi</h3>
-                <p>Ugradbeni ormari sa maksimalnim iskorištenjem prostora.</p>
-            </div>
-            <div class="box">
-                <h3>Dnevne sobe</h3>
-                <p>TV komode, police i kompletna rješenja za dnevni boravak.</p>
-            </div>
-            <div class="box">
-                <h3>Spavaće sobe</h3>
-                <p>Kreveti, noćni ormarići i komode po mjeri.</p>
-            </div>
-            <div class="box">
-                <h3>Uredski namještaj</h3>
-                <p>Namještaj za kancelarije i poslovne prostore.</p>
-            </div>
-        </div>
-    </div>
-</section>
+<script>
+// Provjera browser podrške
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+const synth = window.speechSynthesis;
 
-<section class="portfolio" id="portfolio">
-    <div class="container">
-        <h2>Portfolio</h2>
-        <div class="portfolio-grid">
-            <img src="kitchen-01.jpg" alt="Kuhinja po mjeri">
-            <img src="wardrobe-01.jpg" alt="Ormar po mjeri">
-            <img src="livingroom-01.jpg" alt="Dnevna soba">
-            <img src="bedroom-01.jpg" alt="Spavaća soba">
-        </div>
-    </div>
-</section>
+function startRecognition(lang) {
+    if (!SpeechRecognition) {
+        alert('Vaš browser ne podržava glasovno prepoznavanje.');
+        return;
+    }
 
-<section class="pricing" id="pricing">
-    <div class="container">
-        <h2>Cjenovnik</h2>
-        <p style="text-align:center;">
-            Cijene zavise od materijala i dimenzija. Okvirne cijene:
-        </p>
-        <ul>
-            <li>Kuhinje po mjeri – od XX KM / m²</li>
-            <li>Ugradbeni ormari – od XX KM</li>
-            <li>Garderoberi – od XX KM</li>
-            <li>TV komode i police – od XX KM</li>
-        </ul>
-    </div>
-</section>
+    let recognition = new SpeechRecognition();
+    recognition.lang = lang === 'english' ? 'en-US' : 'de-DE';
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
 
-<section class="faq" id="faq">
-    <div class="container">
-        <h2>Često postavljena pitanja</h2>
-        <div class="box">
-            <strong>Koliko traje izrada?</strong>
-            <p>Prosječno 15–30 radnih dana, zavisno od projekta.</p>
-        </div>
-        <div class="box">
-            <strong>Da li nudite montažu?</strong>
-            <p>Da, nudimo mjerenje i kompletnu montažu.</p>
-        </div>
-        <div class="box">
-            <strong>Da li postoji garancija?</strong>
-            <p>Da, dajemo garanciju na izradu i okove.</p>
-        </div>
-    </div>
-</section>
+    recognition.start();
 
-<section id="contact">
-    <div class="container">
-        <h2>Kontakt</h2>
-        <div class="contact-info">
-            <p><strong>MA-BH Namještaj po mjeri</strong></p>
-            <p>Telefon: +387 XX XXX XXX</p>
-            <p>Email: info@ma-bh.ba</p>
-            <p>Radno vrijeme: Ponedjeljak – Petak, 08:00 – 16:00</p>
-        </div>
+    recognition.onresult = function(event) {
+        const speechResult = event.results[0][0].transcript;
+        console.log('User said: ', speechResult);
 
-        <form>
-            <input type="text" placeholder="Vaše ime" required>
-            <input type="email" placeholder="Vaš email" required>
-            <textarea rows="5" placeholder="Vaša poruka"></textarea>
-            <button type="submit" class="btn">Pošalji upit</button>
-        </form>
-    </div>
-</section>
+        // Prikaz u chat boxu
+        const output = document.getElementById(`${lang}-output`);
+        output.innerHTML = `<b>Vi:</b> ${speechResult}<br>`;
 
-<footer>
-    <p>© 2026 MA-BH Namještaj po mjeri. Sva prava zadržana.</p>
-</footer>
+        // Slanje na AI chat embed (ili fake primjer)
+        // Za demo: generišemo odgovor tekstom
+        let aiResponse = `Ovo je primjer odgovora na: "${speechResult}"`;
+        output.innerHTML += `<b>AI:</b> ${aiResponse}`;
+
+        // TTS: AI odgovara glasom
+        const utter = new SpeechSynthesisUtterance(aiResponse);
+        utter.lang = lang === 'english' ? 'en-US' : 'de-DE';
+        synth.speak(utter);
+    };
+
+    recognition.onerror = function(event) {
+        console.error('Error recognition: ', event.error);
+    };
+}
+</script>
 
 </body>
 </html>
