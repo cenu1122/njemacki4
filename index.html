@@ -1,61 +1,293 @@
 <!DOCTYPE html>
 <html lang="bs">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Interaktivni Kurs Njemačkog</title>
-  <style>
-    body { font-family: Arial, sans-serif; margin: 20px; background: #f4f4f4; }
-    h1, h2 { color: #2c3e50; }
-    .lesson, .quiz { background: #fff; padding: 20px; margin-bottom: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);}
-    button { padding: 10px 20px; margin: 5px; border: none; border-radius: 5px; background-color: #3498db; color: #fff; cursor: pointer; }
-    button:hover { background-color: #2980b9; }
-    .feedback { margin-top: 10px; font-weight: bold; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MA-BH Namještaj po mjeri</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        header {
+            background: #2c2c2c;
+            color: #fff;
+            padding: 15px 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            padding: 0;
+            margin: 0;
+        }
+
+        nav ul li {
+            margin-left: 20px;
+        }
+
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        nav ul li a:hover {
+            text-decoration: underline;
+        }
+
+        .hero {
+            background: url("hero.jpg") center/cover no-repeat;
+            color: #fff;
+            height: 70vh;
+            display: flex;
+            align-items: center;
+        }
+
+        .hero-content {
+            background: rgba(0,0,0,0.6);
+            padding: 30px;
+            border-radius: 5px;
+        }
+
+        .hero h1 {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+
+        .btn {
+            display: inline-block;
+            background: #c59d5f;
+            color: #fff;
+            padding: 12px 25px;
+            margin-top: 15px;
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 4px;
+        }
+
+        .btn:hover {
+            background: #b08950;
+        }
+
+        section {
+            padding: 60px 0;
+        }
+
+        section h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 32px;
+        }
+
+        .about, .pricing, .faq {
+            background: #f4f4f4;
+        }
+
+        .services-grid, .portfolio-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .box {
+            background: #fff;
+            padding: 25px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        .portfolio-grid img {
+            width: 100%;
+            border-radius: 5px;
+        }
+
+        .contact-info {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        form {
+            max-width: 600px;
+            margin: auto;
+        }
+
+        form input, form textarea {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        footer {
+            background: #2c2c2c;
+            color: #fff;
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        @media(max-width: 768px) {
+            .hero h1 {
+                font-size: 30px;
+            }
+        }
+    </style>
 </head>
 <body>
 
-<h1>Interaktivni Kurs Njemačkog</h1>
+<header>
+    <div class="container">
+        <nav>
+            <h2>MA-BH Namještaj</h2>
+            <ul>
+                <li><a href="#home">Početna</a></li>
+                <li><a href="#about">O nama</a></li>
+                <li><a href="#services">Usluge</a></li>
+                <li><a href="#portfolio">Portfolio</a></li>
+                <li><a href="#pricing">Cjenovnik</a></li>
+                <li><a href="#faq">FAQ</a></li>
+                <li><a href="#contact">Kontakt</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
 
-<div class="lesson">
-  <h2>Lekcija 1: Osnovne Fraze</h2>
-  <p>Hallo = Zdravo</p>
-  <p>Danke = Hvala</p>
-  <p>Bitte = Molim</p>
-  <button onclick="speakText('Hallo')">▶️ Hallo</button>
-  <button onclick="speakText('Danke')">▶️ Danke</button>
-  <button onclick="speakText('Bitte')">▶️ Bitte</button>
-</div>
+<section class="hero" id="home">
+    <div class="container">
+        <div class="hero-content">
+            <h1>Namještaj po mjeri za svaki prostor</h1>
+            <p>Kvalitetna izrada, moderan dizajn i rješenja prilagođena vašem domu ili poslovnom prostoru.</p>
+            <a href="#contact" class="btn">Zatraži besplatnu procjenu</a>
+        </div>
+    </div>
+</section>
 
-<div class="quiz">
-  <h2>Kviz: Prevedi na njemački</h2>
-  <p>Kako se kaže "Hvala" na njemačkom?</p>
-  <button onclick="checkAnswer(this,'Danke')">Danke</button>
-  <button onclick="checkAnswer(this,'Bitte')">Bitte</button>
-  <button onclick="checkAnswer(this,'Hallo')">Hallo</button>
-  <div class="feedback" id="feedback"></div>
-</div>
+<section class="about" id="about">
+    <div class="container">
+        <h2>O nama</h2>
+        <p>
+            MA-BH Namještaj po mjeri bavi se dizajnom, izradom i montažom namještaja po mjeri.
+            Svakom projektu pristupamo individualno, koristeći kvalitetne materijale i provjerene okove.
+            Naš cilj je funkcionalan, estetski i dugotrajan namještaj.
+        </p>
+    </div>
+</section>
 
-<script>
-  // Funkcija za TTS (Text-to-Speech)
-  function speakText(text) {
-    const utter = new SpeechSynthesisUtterance(text);
-    utter.lang = 'de-DE'; // njemački jezik
-    speechSynthesis.speak(utter);
-  }
+<section id="services">
+    <div class="container">
+        <h2>Usluge</h2>
+        <div class="services-grid">
+            <div class="box">
+                <h3>Kuhinje po mjeri</h3>
+                <p>Moderne i funkcionalne kuhinje prilagođene vašem prostoru.</p>
+            </div>
+            <div class="box">
+                <h3>Ormari i garderoberi</h3>
+                <p>Ugradbeni ormari sa maksimalnim iskorištenjem prostora.</p>
+            </div>
+            <div class="box">
+                <h3>Dnevne sobe</h3>
+                <p>TV komode, police i kompletna rješenja za dnevni boravak.</p>
+            </div>
+            <div class="box">
+                <h3>Spavaće sobe</h3>
+                <p>Kreveti, noćni ormarići i komode po mjeri.</p>
+            </div>
+            <div class="box">
+                <h3>Uredski namještaj</h3>
+                <p>Namještaj za kancelarije i poslovne prostore.</p>
+            </div>
+        </div>
+    </div>
+</section>
 
-  // Funkcija za provjeru odgovora u kvizu
-  function checkAnswer(button, correct) {
-    const feedback = document.getElementById('feedback');
-    if(button.textContent === correct){
-      feedback.textContent = "✅ Tačno!";
-      feedback.style.color = "green";
-    } else {
-      feedback.textContent = "❌ Netačno, pokušaj ponovo.";
-      feedback.style.color = "red";
-    }
-  }
-</script>
+<section class="portfolio" id="portfolio">
+    <div class="container">
+        <h2>Portfolio</h2>
+        <div class="portfolio-grid">
+            <img src="kitchen-01.jpg" alt="Kuhinja po mjeri">
+            <img src="wardrobe-01.jpg" alt="Ormar po mjeri">
+            <img src="livingroom-01.jpg" alt="Dnevna soba">
+            <img src="bedroom-01.jpg" alt="Spavaća soba">
+        </div>
+    </div>
+</section>
+
+<section class="pricing" id="pricing">
+    <div class="container">
+        <h2>Cjenovnik</h2>
+        <p style="text-align:center;">
+            Cijene zavise od materijala i dimenzija. Okvirne cijene:
+        </p>
+        <ul>
+            <li>Kuhinje po mjeri – od XX KM / m²</li>
+            <li>Ugradbeni ormari – od XX KM</li>
+            <li>Garderoberi – od XX KM</li>
+            <li>TV komode i police – od XX KM</li>
+        </ul>
+    </div>
+</section>
+
+<section class="faq" id="faq">
+    <div class="container">
+        <h2>Često postavljena pitanja</h2>
+        <div class="box">
+            <strong>Koliko traje izrada?</strong>
+            <p>Prosječno 15–30 radnih dana, zavisno od projekta.</p>
+        </div>
+        <div class="box">
+            <strong>Da li nudite montažu?</strong>
+            <p>Da, nudimo mjerenje i kompletnu montažu.</p>
+        </div>
+        <div class="box">
+            <strong>Da li postoji garancija?</strong>
+            <p>Da, dajemo garanciju na izradu i okove.</p>
+        </div>
+    </div>
+</section>
+
+<section id="contact">
+    <div class="container">
+        <h2>Kontakt</h2>
+        <div class="contact-info">
+            <p><strong>MA-BH Namještaj po mjeri</strong></p>
+            <p>Telefon: +387 XX XXX XXX</p>
+            <p>Email: info@ma-bh.ba</p>
+            <p>Radno vrijeme: Ponedjeljak – Petak, 08:00 – 16:00</p>
+        </div>
+
+        <form>
+            <input type="text" placeholder="Vaše ime" required>
+            <input type="email" placeholder="Vaš email" required>
+            <textarea rows="5" placeholder="Vaša poruka"></textarea>
+            <button type="submit" class="btn">Pošalji upit</button>
+        </form>
+    </div>
+</section>
+
+<footer>
+    <p>© 2026 MA-BH Namještaj po mjeri. Sva prava zadržana.</p>
+</footer>
 
 </body>
 </html>
