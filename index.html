@@ -2,7 +2,7 @@
 <html lang="bs">
 <head>
   <meta charset="UTF-8">
-  <title>Besplatni Prevodilac Vosk</title>
+  <title>Besplatni Prevodilac (Web Speech API)</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
     body { font-family: Arial, sans-serif; background: #f4f6f8; padding: 20px; max-width: 700px; margin: auto; }
@@ -15,7 +15,7 @@
 </head>
 <body>
 
-<h1>🎤🌍 Besplatni Prevodilac (Vosk)</h1>
+<h1>🎤🌍 Besplatni Prevodilac</h1>
 <label>Izaberi ulazni jezik:</label><br>
 <select id="sourceLang">
   <option value="en">Engleski</option>
@@ -29,71 +29,66 @@
 <button onclick="speak()">🔊 Preslušaj prevod</button>
 <p id="status"></p>
 
-<script src="https://unpkg.com/vosk-browser/dist/worker.js"></script>
-<script src="https://unpkg.com/vosk-browser/dist/vosk.js"></script>
 <script>
-let recognizer;
-let micStream;
 const status = document.getElementById('status');
+const micBtn = document.getElementById('micBtn');
+let recognition;
 
-async function initVosk() {
-    status.innerText = '⏳ Učitavam model...';
-    await Vosk.init();
-    const model = new Vosk.Model('https://alphacephei.com/vosk/models/vosk-model-small-en-us-0.15.zip');
-    recognizer = new Vosk.Recognizer(model, 16000);
-    status.innerText = '✅ Spreman za govor';
+function initRecognition() {
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SpeechRecognition) {
+    status.innerText = '❌ Tvoj browser ne podržava govor.';
+    micBtn.disabled = true;
+    return;
+  }
+  recognition = new SpeechRecognition();
+  recognition.continuous = false;
+  recognition.interimResults = false;
+  recognition.onstart = () => { status.innerText = '🎤 Počni govoriti...'; };
+  recognition.onresult = (event) => {
+    document.getElementById('inputText').value = event.results[0][0].transcript;
+    status.innerText = '✅ Govor prepoznat. Klikni PREVEDI.';
+  };
+  recognition.onerror = (event) => { status.innerText = '❌ Greška pri snimanju govora: ' + event.error; };
+  recognition.onend = () => {};
 }
 
-async function startListening() {
-    status.innerText = '🎤 Počni govoriti...';
-    micStream = await navigator.mediaDevices.getUserMedia({ audio: true });
-    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-    const source = audioContext.createMediaStreamSource(micStream);
-    const processor = audioContext.createScriptProcessor(4096, 1, 1);
-
-    source.connect(processor);
-    processor.connect(audioContext.destination);
-
-    processor.onaudioprocess = function(e) {
-        const float32Array = e.inputBuffer.getChannelData(0);
-        recognizer.acceptWaveform(float32Array);
-        const result = recognizer.result();
-        if(result.text) {
-            document.getElementById('inputText').value = result.text;
-        }
-    };
-}
-
-document.getElementById('micBtn').addEventListener('click', startListening);
+micBtn.addEventListener('click', () => {
+  try {
+    recognition.start();
+  } catch(e) {
+    status.innerText = '❌ Ne mogu pokrenuti mikrofon. Pokušaj ponovo.';
+  }
+});
 
 async function translate() {
-    const text = document.getElementById('inputText').value;
-    status.innerText = '⏳ Prevodi se tekst...';
-    if(!text){ status.innerText = '⚠ Nema teksta za prevođenje.'; return; }
-    try{
-        const response = await fetch('https://libretranslate.de/translate', {
-            method:'POST',
-            headers:{'Content-Type':'application/json'},
-            body: JSON.stringify({q:text, source:'auto', target:'bs', format:'text'})
-        });
-        const data = await response.json();
-        document.getElementById('outputText').value = data.translatedText;
-        status.innerText = '✅ Prevod gotov.';
-    } catch(e){
-        status.innerText = '❌ Greška pri prevođenju.';
-    }
+  const text = document.getElementById('inputText').value;
+  if(!text){ status.innerText = '⚠ Nema teksta za prevođenje.'; return; }
+  status.innerText = '⏳ Prevodi se tekst...';
+  try{
+    const response = await fetch('https://libretranslate.de/translate', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({q:text, source:'auto', target:'bs', format:'text'})
+    });
+    const data = await response.json();
+    document.getElementById('outputText').value = data.translatedText;
+    status.innerText = '✅ Prevod gotov.';
+  } catch(e){
+    status.innerText = '❌ Greška pri prevođenju.';
+  }
 }
 
 function speak() {
-    const text = document.getElementById('outputText').value;
-    if(!text){ status.innerText = '⚠ Nema teksta za čitanje.'; return; }
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang='bs-BA';
-    speechSynthesis.speak(utterance);
-    status.innerText='🔊 Čitam prevod...';
+  const text = document.getElementById('outputText').value;
+  if(!text){ status.innerText = '⚠ Nema teksta za čitanje.'; return; }
+  const utterance = new SpeechSynthesisUtterance(text);
+  utterance.lang='bs-BA';
+  speechSynthesis.speak(utterance);
+  status.innerText='🔊 Čitam prevod...';
 }
 
-initVosk();
+initRecognition();
 </script>
 
 </body>
