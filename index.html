@@ -1,117 +1,99 @@
 <!DOCTYPE html>
 <html lang="bs">
 <head>
-  <meta charset="UTF-8" />
-  <title>Besplatni Prevodilac</title>
+  <meta charset="UTF-8">
+  <title>Besplatni Prevodilac Vosk</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f4f6f8;
-      padding: 20px;
-      max-width: 700px;
-      margin: auto;
-    }
+    body { font-family: Arial, sans-serif; background: #f4f6f8; padding: 20px; max-width: 700px; margin: auto; }
     h1 { text-align: center; }
-    textarea {
-      width: 100%;
-      min-height: 120px;
-      padding: 10px;
-      margin-top: 10px;
-    }
-    select, button {
-      padding: 10px;
-      margin-top: 10px;
-    }
-    button {
-      cursor: pointer;
-    }
+    textarea { width: 100%; min-height: 120px; padding: 10px; margin-top: 10px; }
+    select, button { padding: 10px; margin-top: 10px; }
+    button { cursor: pointer; }
+    #status { color: green; font-weight: bold; margin-top: 10px; }
   </style>
 </head>
 <body>
 
-<h1>🎤🌍 Besplatni Prevodilac</h1>
-
+<h1>🎤🌍 Besplatni Prevodilac (Vosk)</h1>
 <label>Izaberi ulazni jezik:</label><br>
 <select id="sourceLang">
   <option value="en">Engleski</option>
   <option value="de">Njemački</option>
 </select>
-
-<textarea id="inputText" placeholder="Govori ili upiši tekst..."></textarea>
-
-<br>
-<button id="micBtn" onclick="startListening()">🎤 Govori</button>
-<p id="status" style="color:green;font-weight:bold;"></p>
+<textarea id="inputText" placeholder="Govori ili upiši tekst..."></textarea><br>
+<button id="micBtn">🎤 Govori</button>
 <button onclick="translate()">🌍 Prevedi</button>
-
 <h3>Prevod (Bosanski):</h3>
 <textarea id="outputText" readonly></textarea>
-
 <button onclick="speak()">🔊 Preslušaj prevod</button>
+<p id="status"></p>
 
+<script src="https://unpkg.com/vosk-browser/dist/worker.js"></script>
+<script src="https://unpkg.com/vosk-browser/dist/vosk.js"></script>
 <script>
-// SPEECH TO TEXT
-function startListening() {
-  const lang = document.getElementById('sourceLang').value;
-  const status = document.getElementById('status');
+let recognizer;
+let micStream;
+const status = document.getElementById('status');
 
-  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if (!SpeechRecognition) {
-    status.innerText = '❌ Tvoj browser ne podržava govor.';
-    return;
-  }
-
-  const recognition = new SpeechRecognition();
-  recognition.lang = lang === 'en' ? 'en-US' : 'de-DE';
-  recognition.interimResults = false;
-
-  status.innerText = '🎤 Počni govoriti...';
-
-  recognition.start();
-
-  recognition.onresult = function(event) {
-    document.getElementById('inputText').value = event.results[0][0].transcript;
-    status.innerText = '✅ Govor prepoznat.';
-  };
-
-  recognition.onerror = function() {
-    status.innerText = '❌ Greška pri snimanju govora.';
-  };
-
-  recognition.onend = function() {
-    setTimeout(() => status.innerText = '', 2000);
-  };
-}
+async function initVosk() {
+    status.innerText = '⏳ Učitavam model...';
+    await Vosk.init();
+    const model = new Vosk.Model('https://alphacephei.com/vosk/models/vosk-model-small-en-us-0.15.zip');
+    recognizer = new Vosk.Recognizer(model, 16000);
+    status.innerText = '✅ Spreman za govor';
 }
 
-// TRANSLATE (FREE LibreTranslate public instance)
+async function startListening() {
+    status.innerText = '🎤 Počni govoriti...';
+    micStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    const source = audioContext.createMediaStreamSource(micStream);
+    const processor = audioContext.createScriptProcessor(4096, 1, 1);
+
+    source.connect(processor);
+    processor.connect(audioContext.destination);
+
+    processor.onaudioprocess = function(e) {
+        const float32Array = e.inputBuffer.getChannelData(0);
+        recognizer.acceptWaveform(float32Array);
+        const result = recognizer.result();
+        if(result.text) {
+            document.getElementById('inputText').value = result.text;
+        }
+    };
+}
+
+document.getElementById('micBtn').addEventListener('click', startListening);
+
 async function translate() {
-  const text = document.getElementById('inputText').value;
-  const source = document.getElementById('sourceLang').value;
-
-  const response = await fetch('https://libretranslate.de/translate', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      q: text,
-      source: source,
-      target: 'bs',
-      format: 'text'
-    })
-  });
-
-  const data = await response.json();
-  document.getElementById('outputText').value = data.translatedText;
+    const text = document.getElementById('inputText').value;
+    status.innerText = '⏳ Prevodi se tekst...';
+    if(!text){ status.innerText = '⚠ Nema teksta za prevođenje.'; return; }
+    try{
+        const response = await fetch('https://libretranslate.de/translate', {
+            method:'POST',
+            headers:{'Content-Type':'application/json'},
+            body: JSON.stringify({q:text, source:'auto', target:'bs', format:'text'})
+        });
+        const data = await response.json();
+        document.getElementById('outputText').value = data.translatedText;
+        status.innerText = '✅ Prevod gotov.';
+    } catch(e){
+        status.innerText = '❌ Greška pri prevođenju.';
+    }
 }
 
-// TEXT TO SPEECH
 function speak() {
-  const text = document.getElementById('outputText').value;
-  const utterance = new SpeechSynthesisUtterance(text);
-  utterance.lang = 'bs-BA';
-  speechSynthesis.speak(utterance);
+    const text = document.getElementById('outputText').value;
+    if(!text){ status.innerText = '⚠ Nema teksta za čitanje.'; return; }
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang='bs-BA';
+    speechSynthesis.speak(utterance);
+    status.innerText='🔊 Čitam prevod...';
 }
+
+initVosk();
 </script>
 
 </body>
