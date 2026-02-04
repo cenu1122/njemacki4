@@ -41,7 +41,8 @@
 <textarea id="inputText" placeholder="Govori ili upiši tekst..."></textarea>
 
 <br>
-<button onclick="startListening()">🎤 Govori</button>
+<button id="micBtn" onclick="startListening()">🎤 Govori</button>
+<p id="status" style="color:green;font-weight:bold;"></p>
 <button onclick="translate()">🌍 Prevedi</button>
 
 <h3>Prevod (Bosanski):</h3>
@@ -53,15 +54,35 @@
 // SPEECH TO TEXT
 function startListening() {
   const lang = document.getElementById('sourceLang').value;
-  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-  const recognition = new SpeechRecognition();
+  const status = document.getElementById('status');
 
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SpeechRecognition) {
+    status.innerText = '❌ Tvoj browser ne podržava govor.';
+    return;
+  }
+
+  const recognition = new SpeechRecognition();
   recognition.lang = lang === 'en' ? 'en-US' : 'de-DE';
+  recognition.interimResults = false;
+
+  status.innerText = '🎤 Počni govoriti...';
+
   recognition.start();
 
   recognition.onresult = function(event) {
     document.getElementById('inputText').value = event.results[0][0].transcript;
+    status.innerText = '✅ Govor prepoznat.';
   };
+
+  recognition.onerror = function() {
+    status.innerText = '❌ Greška pri snimanju govora.';
+  };
+
+  recognition.onend = function() {
+    setTimeout(() => status.innerText = '', 2000);
+  };
+}
 }
 
 // TRANSLATE (FREE LibreTranslate public instance)
